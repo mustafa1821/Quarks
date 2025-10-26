@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quarks - Advanced Backtesting Platform</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <i class="fas fa-chart-line"></i> Quarks
+            </a>
+            <div class="nav-links">
+                <a href="#" class="nav-link active" data-tab="dashboard">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
+                <a href="#" class="nav-link" data-tab="strategies">
+                    <i class="fas fa-chess"></i> Strategies
+                </a>
+                <a href="#" class="nav-link" data-tab="results">
+                    <i class="fas fa-chart-bar"></i> Results
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Dashboard Tab -->
+        <div id="dashboard-tab" class="tab-content">
+            <!-- Header -->
+            <header class="page-header">
+                <h1><i class="fas fa-rocket"></i> Advanced Backtesting Platform</h1>
+                <p>Test your trading strategies with professional-grade backtesting tools</p>
+            </header>
+
+            <!-- Configuration Panel -->
+            <div class="config-panel">
+                <div class="panel-header">
+                    <h3><i class="fas fa-cog"></i> Backtest Configuration</h3>
+                </div>
+                
+                <div class="config-grid">
+                    <!-- Stock Selection -->
+                    <div class="config-group">
+                        <label for="tickerSelect">
+                            <i class="fas fa-chart-line"></i> Stock Ticker
+                        </label>
+                        <input type="text" id="tickerSelect" placeholder="AAPL" value="AAPL" />
+                    </div>
+
+                    <!-- Date Range -->
+                    <div class="config-group">
+                        <label for="startDate">
+                            <i class="fas fa-calendar-alt"></i> Start Date
+                        </label>
+                        <input type="date" id="startDate" />
+                    </div>
+
+                    <div class="config-group">
+                        <label for="endDate">
+                            <i class="fas fa-calendar-check"></i> End Date
+                        </label>
+                        <input type="date" id="endDate" />
+                    </div>
+
+                    <!-- Initial Cash -->
+                    <div class="config-group">
+                        <label for="initialCash">
+                            <i class="fas fa-dollar-sign"></i> Initial Capital
+                        </label>
+                        <input type="number" id="initialCash" placeholder="100000" value="100000" />
+                    </div>
+
+                    <!-- Commission -->
+                    <div class="config-group">
+                        <label for="commission">
+                            <i class="fas fa-percentage"></i> Commission (%)
+                        </label>
+                        <input type="number" id="commission" placeholder="0.1" step="0.001" value="0.001" />
+                    </div>
+
+                    <!-- Position Sizing -->
+                    <div class="config-group">
+                        <label for="positionSizing">
+                            <i class="fas fa-balance-scale"></i> Position Sizing
+                        </label>
+                        <select id="positionSizing">
+                            <option value="percentage">Percentage of Portfolio</option>
+                            <option value="allin">All-In</option>
+                            <option value="fixed">Fixed Dollar Amount</option>
+                            <option value="shares">Fixed Shares</option>
+                        </select>
+                    </div>
+
+                    <!-- Position Size Value -->
+                    <div class="config-group" id="positionSizeGroup">
+                        <label for="positionSizeValue" id="positionSizeLabel">
+                            <i class="fas fa-chart-pie"></i> Percentage
+                        </label>
+                        <input type="number" id="positionSizeValue" placeholder="95" value="95" />
+                    </div>
+
+                    <!-- Strategy Selection -->
+                    <div class="config-group full-width">
+                        <label for="strategySelect">
+                            <i class="fas fa-chess"></i> Trading Strategy
+                        </label>
+                        <select id="strategySelect">
+                            <option value="sma">SMA Crossover</option>
+                            <option value="rsi">RSI</option>
+                            <option value="macd">MACD</option>
+                            <option value="buyhold">Buy & Hold</option>
+                            <option value="bollinger">Bollinger Bands</option>
+                            <option value="ema">EMA Crossover</option>
+                            <option value="stochastic">Stochastic</option>
+                            <option value="momentum">Momentum</option>
+                            <option value="triple">Triple SMA</option>
+                            <option value="meanreversion">Mean Reversion</option>
+                            <option value="custom">Custom Strategy Builder</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Custom Strategy Builder (Hidden by default) -->
+                <div id="customStrategyPanel" class="custom-strategy-panel" style="display: none;">
+                    <h4><i class="fas fa-tools"></i> Custom Strategy Builder</h4>
+                    <div class="custom-grid">
+                        <div class="config-group">
+                            <label>Indicator Type</label>
+                            <select id="indicatorType">
+                                <option value="sma">SMA</option>
+                                <option value="ema">EMA</option>
+                                <option value="rsi">RSI</option>
+                                <option value="macd">MACD</option>
+                                <option value="bollinger">Bollinger Bands</option>
+                                <option value="stochastic">Stochastic</option>
+                            </select>
+                        </div>
+                        <div class="config-group">
+                            <label>Period</label>
+                            <input type="number" id="indicatorPeriod" value="14" />
+                        </div>
+                        <div class="config-group">
+                            <label>Buy Condition</label>
+                            <select id="buyCondition">
+                                <option value="above">Above Threshold</option>
+                                <option value="below">Below Threshold</option>
+                                <option value="cross">Cross Above</option>
+                                <option value="crossbelow">Cross Below</option>
+                            </select>
+                        </div>
+                        <div class="config-group">
+                            <label>Threshold</label>
+                            <input type="number" id="indicatorThreshold" value="50" step="0.01" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="config-actions">
+                    <button id="runBacktest" class="btn btn-primary">
+                        <i class="fas fa-play"></i> Run Backtest
+                    </button>
+                    <button id="resetConfig" class="btn btn-secondary">
+                        <i class="fas fa-redo"></i> Reset
+                    </button>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div id="resultsSection" class="results-section" style="display: none;">
+                <!-- Performance Overview -->
+                <div class="results-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-chart-line"></i> Performance Overview</h3>
+                    </div>
+                    <div class="performance-grid">
+                        <div class="metric-card">
+                            <div class="metric-icon" style="background: rgba(0, 255, 136, 0.2);">
+                                <i class="fas fa-dollar-sign" style="color: #00ff88;"></i>
+                            </div>
+                            <div class="metric-info">
+                                <p class="metric-label">Total Return</p>
+                                <p class="metric-value" id="totalReturn">$0.00</p>
+                                <p class="metric-percentage" id="totalReturnPercent">0%</p>
+                            </div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon" style="background: rgba(0, 212, 255, 0.2);">
+                                <i class="fas fa-chart-line" style="color: #00d4ff;"></i>
+                            </div>
+                            <div class="metric-info">
+                                <p class="metric-label">Sharpe Ratio</p>
+                                <p class="metric-value" id="sharpeRatio">0.00</p>
+                            </div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon" style="background: rgba(255, 99, 71, 0.2);">
+                                <i class="fas fa-arrow-down" style="color: #ff6347;"></i>
+                            </div>
+                            <div class="metric-info">
+                                <p class="metric-label">Max Drawdown</p>
+                                <p class="metric-value" id="maxDrawdown">0%</p>
+                            </div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon" style="background: rgba(255, 193, 7, 0.2);">
+                                <i class="fas fa-bullseye" style="color: #ffc107;"></i>
+                            </div>
+                            <div class="metric-info">
+                                <p class="metric-label">Win Rate</p>
+                                <p class="metric-value" id="winRate">0%</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trade Statistics -->
+                <div class="results-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-chart-bar"></i> Trade Statistics</h3>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <p class="stat-label">Total Trades</p>
+                            <p class="stat-value" id="totalTrades">0</p>
+                        </div>
+                        <div class="stat-item">
+                            <p class="stat-label">Winning Trades</p>
+                            <p class="stat-value" id="winningTrades">0</p>
+                        </div>
+                        <div class="stat-item">
+                            <p class="stat-label">Losing Trades</p>
+                            <p class="stat-value" id="losingTrades">0</p>
+                        </div>
+                        <div class="stat-item">
+                            <p class="stat-label">Avg Profit/Loss</p>
+                            <p class="stat-value" id="avgProfitLoss">$0.00</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts -->
+                <div class="results-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-chart-area"></i> Performance Chart</h3>
+                    </div>
+                    <canvas id="performanceChart"></canvas>
+                </div>
+
+                <!-- Yahoo Finance Chart -->
+                <div class="results-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-chart-line"></i> Stock Chart</h3>
+                    </div>
+                    <div id="yahooChartContainer" style="height: 400px;"></div>
+                </div>
+
+                <!-- Trade History Table -->
+                <div class="results-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-list"></i> Trade History</h3>
+                    </div>
+                    <div class="table-container">
+                        <table id="tradesTable">
+                            <thead>
+                                <tr>
+                                    <th>Trade #</th>
+                                    <th>Entry Date</th>
+                                    <th>Entry Price</th>
+                                    <th>Shares</th>
+                                    <th>Exit Date</th>
+                                    <th>Exit Price</th>
+                                    <th>Profit/Loss</th>
+                                    <th>Return %</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tradesTableBody">
+                                <!-- Trades will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Strategies Tab -->
+        <div id="strategies-tab" class="tab-content" style="display: none;">
+            <header class="page-header">
+                <h1><i class="fas fa-chess"></i> Trading Strategies</h1>
+                <p>Explore available trading strategies and their descriptions</p>
+            </header>
+            
+            <div class="strategies-grid" id="strategiesGrid">
+                <!-- Strategies will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Results Tab -->
+        <div id="results-tab" class="tab-content" style="display: none;">
+            <header class="page-header">
+                <h1><i class="fas fa-chart-bar"></i> Backtest Results</h1>
+                <p>View detailed results from your backtest runs</p>
+            </header>
+            
+            <div id="resultsDetails" class="results-card" style="display: none;">
+                <!-- Results will be populated dynamically -->
+            </div>
+        </div>
+
+        <!-- Loading Overlay -->
+        <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+            <div class="loading-content">
+                <i class="fas fa-spinner fa-spin"></i>
+                <h3>Running Backtest...</h3>
+                <p>This may take a few moments</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
