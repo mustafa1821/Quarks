@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Volume Data Tracker</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <i class="fas fa-chart-line"></i> StockTracker
+            </a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">
+                    <i class="fas fa-home"></i> Home
+                </a>
+                <a href="#" class="nav-link">
+                    <i class="fas fa-chart-bar"></i> Analytics
+                </a>
+                <a href="#" class="nav-link">
+                    <i class="fas fa-cog"></i> Settings
+                </a>
+            </div>
+            <div class="auth-buttons">
+                <a href="login.html" class="auth-btn auth-btn-secondary">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </a>
+                <a href="signup.html" class="auth-btn auth-btn-primary">
+                    <i class="fas fa-user-plus"></i> Sign Up
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-chart-line"></i> Stock Volume Data Tracker</h1>
+            <p>Search for stock tickers and analyze volume data with advanced filtering</p>
+        </header>
+
+        <div class="search-section">
+            <div class="search-container">
+                <input type="text" id="tickerInput" placeholder="Enter stock ticker (e.g., AAPL, MSFT, GOOGL)" />
+                <button id="searchBtn" class="search-btn">
+                    <i class="fas fa-search"></i> Search
+                </button>
+            </div>
+        </div>
+
+        <div class="filters-section">
+            <h3><i class="fas fa-filter"></i> Filters</h3>
+            <div class="filters-grid">
+                <div class="filter-group">
+                    <label for="dateFrom">From Date:</label>
+                    <input type="date" id="dateFrom" />
+                </div>
+                <div class="filter-group">
+                    <label for="dateTo">To Date:</label>
+                    <input type="date" id="dateTo" />
+                </div>
+                <div class="filter-group">
+                    <label for="minAmount">Minimum Amount ($):</label>
+                    <input type="number" id="minAmount" placeholder="0" min="0" step="0.01" />
+                </div>
+                <div class="filter-group">
+                    <label for="transactionType">Transaction Type:</label>
+                    <select id="transactionType">
+                        <option value="all">All Transactions</option>
+                        <option value="buy">Buy Orders</option>
+                        <option value="sell">Sell Orders</option>
+                    </select>
+                </div>
+            </div>
+            <div class="filter-actions">
+                <button id="applyFilters" class="btn-primary">
+                    <i class="fas fa-filter"></i> Apply Filters
+                </button>
+                <button id="clearFilters" class="btn-secondary">
+                    <i class="fas fa-times"></i> Clear Filters
+                </button>
+            </div>
+        </div>
+
+        <div class="results-section">
+            <div class="results-header">
+                <h3 id="resultsTitle">Search for a stock ticker to see volume data</h3>
+                <div class="results-stats" id="resultsStats"></div>
+            </div>
+            
+            <div class="loading" id="loading" style="display: none;">
+                <i class="fas fa-spinner fa-spin"></i> Loading data...
+            </div>
+
+            <div class="table-container">
+                <table id="volumeTable" style="display: none;">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Transaction Type</th>
+                            <th>Volume</th>
+                            <th>Price ($)</th>
+                            <th>Total Value ($)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="volumeTableBody">
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="no-results" id="noResults" style="display: none;">
+                <i class="fas fa-chart-bar"></i>
+                <h4>No data found</h4>
+                <p>Try adjusting your filters or search for a different ticker.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
