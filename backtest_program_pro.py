@@ -22,41 +22,84 @@ class PercentSizer(bt.Sizer):
     
     def _getsizing(self, comminfo, cash, data, isbuy):
         if isbuy:
-            size = int((cash * (self.params.percents / 100)) / data.close[0])
+            # Calculate available cash after accounting for percentage
+            available_cash = cash * (self.params.percents / 100)
+            
+            # Calculate commission for the trade
+            # Commission is charged on the total trade value
+            # We need to reserve cash for: (shares * price) + commission
+            # Commission = (shares * price) * commission_rate
+            # Total needed = (shares * price) * (1 + commission_rate)
+            # Therefore: shares = available_cash / (price * (1 + commission_rate))
+            
+            price = data.close[0]
+            comm_rate = comminfo.p.commission  # Get commission rate
+            
+            # Calculate max shares we can afford including commission
+            size = int(available_cash / (price * (1 + comm_rate)))
             return size
         else:
             return self.broker.getposition(data).size
 
 
 class AllInSizer(bt.Sizer):
-    """All-in: Use all available cash"""
+    """All-in: Use all available cash (accounting for commission)"""
     def _getsizing(self, comminfo, cash, data, isbuy):
         if isbuy:
-            size = int(cash / data.close[0])
+            price = data.close[0]
+            comm_rate = comminfo.p.commission  # Get commission rate
+            
+            # Calculate max shares we can afford including commission
+            # Total cost = (shares * price) + commission
+            # Commission = (shares * price) * commission_rate
+            # Total cost = (shares * price) * (1 + commission_rate)
+            # cash = (shares * price) * (1 + commission_rate)
+            # shares = cash / (price * (1 + commission_rate))
+            
+            size = int(cash / (price * (1 + comm_rate)))
             return size
         else:
             return self.broker.getposition(data).size
 
 
 class FixedAmountSizer(bt.Sizer):
-    """Fixed dollar amount per trade"""
+    """Fixed dollar amount per trade (accounting for commission)"""
     params = (('amount', 10000),)
     
     def _getsizing(self, comminfo, cash, data, isbuy):
         if isbuy:
-            size = int(self.params.amount / data.close[0])
+            price = data.close[0]
+            comm_rate = comminfo.p.commission  # Get commission rate
+            
+            # Use the minimum of fixed amount or available cash
+            available = min(self.params.amount, cash)
+            
+            # Calculate max shares we can afford including commission
+            size = int(available / (price * (1 + comm_rate)))
             return size
         else:
             return self.broker.getposition(data).size
 
 
 class FixedSharesSizer(bt.Sizer):
-    """Fixed number of shares per trade"""
+    """Fixed number of shares per trade (with safety check)"""
     params = (('shares', 100),)
     
     def _getsizing(self, comminfo, cash, data, isbuy):
         if isbuy:
-            return self.params.shares
+            price = data.close[0]
+            comm_rate = comminfo.p.commission
+            
+            # Calculate total cost including commission
+            total_cost = (self.params.shares * price) * (1 + comm_rate)
+            
+            # Check if we have enough cash
+            if total_cost <= cash:
+                return self.params.shares
+            else:
+                # Not enough cash - calculate max shares we can afford
+                max_shares = int(cash / (price * (1 + comm_rate)))
+                return max_shares
         else:
             return self.broker.getposition(data).size
 
